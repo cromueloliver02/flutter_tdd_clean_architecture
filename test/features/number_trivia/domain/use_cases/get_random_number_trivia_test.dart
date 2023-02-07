@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter_tdd_clean_architecture/core/use_cases/use_case.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
