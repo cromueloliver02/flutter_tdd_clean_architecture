@@ -19,7 +19,7 @@ main() {
   );
 
   group(
-    'fromJson',
+    'fromMap',
     () {
       test(
         'should return a valid model when the JSON number is an integer',
@@ -52,4 +52,18 @@ main() {
       );
     },
   );
+
+  group('toMap', () {
+    test(
+      'should return a JSON map containing the proper data',
+      () async {
+        // act
+        final result = tNumberTriviaModel.toMap();
+
+        // assert
+        final expectedMap = {'number': 1, 'text': 'Test text'};
+        expect(result, equals(expectedMap));
+      },
+    );
+  });
 }

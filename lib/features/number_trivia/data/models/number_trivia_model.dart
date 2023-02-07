@@ -6,6 +6,15 @@ class NumberTriviaModel extends NumberTrivia {
     required super.text,
   });
 
+  Map<String, dynamic> toMap() {
+    final result = <String, dynamic>{};
+
+    result.addAll({'number': number});
+    result.addAll({'text': text});
+
+    return result;
+  }
+
   factory NumberTriviaModel.fromMap(Map<String, dynamic> map) {
     return NumberTriviaModel(
       number: map['number']?.toInt() ?? 0,
