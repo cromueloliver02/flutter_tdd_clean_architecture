@@ -1,3 +1,4 @@
+import 'package:flutter_tdd_clean_architecture/features/number_trivia/data/models/number_trivia_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -27,6 +28,26 @@ main() {
       remoteDataSource: mockRemoteDataSource,
       localDataSource: mockLocalDataSource,
       networkInfo: mockNetworkInfo,
+    );
+  });
+
+  group('getConcreteNumberTrivia', () {
+    const tNumber = 1;
+    const tNumberTriviaModel = NumberTriviaModel(number: tNumber, text: 'test');
+    const tNumberTrivia = tNumberTriviaModel;
+
+    test(
+      'should check if the device is online',
+      () async {
+        // arrange
+        when(() => mockNetworkInfo.isConnected).thenAnswer(
+          (invocation) async => true,
+        );
+        // act
+        repository.getConcreteNumberTrivia(tNumber);
+        // assert
+        verify(() => mockNetworkInfo.isConnected);
+      },
     );
   });
 }
