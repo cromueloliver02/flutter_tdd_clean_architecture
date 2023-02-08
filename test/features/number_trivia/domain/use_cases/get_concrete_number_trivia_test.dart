@@ -12,8 +12,8 @@ class MockNumberTriviaRepository extends Mock
     implements NumberTriviaRepository {}
 
 void main() {
-  late GetConcreteNumberTrivia usecase;
-  late MockNumberTriviaRepository mockNumberTriviaRepository;
+  late final GetConcreteNumberTrivia usecase;
+  late final MockNumberTriviaRepository mockNumberTriviaRepository;
 
   setUp(() {
     mockNumberTriviaRepository = MockNumberTriviaRepository();
