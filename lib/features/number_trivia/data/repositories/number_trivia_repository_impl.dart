@@ -3,9 +3,8 @@ import 'package:flutter_tdd_clean_architecture/core/error/cache_failure.dart';
 import 'package:flutter_tdd_clean_architecture/core/error/server_exception.dart';
 import 'package:flutter_tdd_clean_architecture/core/error/server_failure.dart';
 
-import '../../../../core/error/failure.dart';
 import '../../../../core/platform/network_info.dart';
-import '../../domain/entities/number_trivia_entity.dart';
+import '../../../../core/typedefs/typedefs.dart';
 import '../../domain/repositories/number_trivia_repository.dart';
 import '../data_sources/number_trivia_local_data_source.dart';
 import '../data_sources/number_trivia_remote_data_source.dart';
@@ -23,7 +22,7 @@ class NumberTriviaRepositoryImpl implements NumberTriviaRepository {
   });
 
   @override
-  Future<Either<Failure, NumberTrivia>> getConcreteNumberTrivia(
+  FutureEitherNumberTrivia getConcreteNumberTrivia(
     int number,
   ) async {
     return _getNumberTrivia(
@@ -32,12 +31,12 @@ class NumberTriviaRepositoryImpl implements NumberTriviaRepository {
   }
 
   @override
-  Future<Either<Failure, NumberTrivia>> getRandomNumberTrivia() async {
+  FutureEitherNumberTrivia getRandomNumberTrivia() async {
     return _getNumberTrivia(remoteDataSource.getRandomNumberTrivia);
   }
 
-  Future<Either<Failure, NumberTrivia>> _getNumberTrivia(
-    Future<NumberTriviaModel> Function() getTriviaCallbank,
+  FutureEitherNumberTrivia _getNumberTrivia(
+    FutureNumberTriviaCallback getTriviaCallbank,
   ) async {
     final bool isConnected = await networkInfo.isConnected;
 
