@@ -3,7 +3,7 @@ import 'package:flutter_tdd_clean_architecture/core/error/cache_failure.dart';
 import 'package:flutter_tdd_clean_architecture/core/error/server_exception.dart';
 import 'package:flutter_tdd_clean_architecture/core/error/server_failure.dart';
 
-import '../../../../core/platform/network_info.dart';
+import '../../../../core/network/network_info.dart';
 import '../../../../core/typedefs/typedefs.dart';
 import '../../domain/repositories/number_trivia_repository.dart';
 import '../data_sources/number_trivia_local_data_source.dart';

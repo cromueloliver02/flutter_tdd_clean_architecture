@@ -12,7 +12,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:flutter_tdd_clean_architecture/features/number_trivia/data/repositories/number_trivia_repository_impl.dart';
 import 'package:flutter_tdd_clean_architecture/features/number_trivia/data/data_sources/number_trivia_remote_data_source.dart';
 import 'package:flutter_tdd_clean_architecture/features/number_trivia/data/data_sources/number_trivia_local_data_source.dart';
-import 'package:flutter_tdd_clean_architecture/core/platform/network_info.dart';
+import 'package:flutter_tdd_clean_architecture/core/network/network_info.dart';
 
 class MockRemoteDataSource extends Mock
     implements NumberTriviaRemoteDataSource {}
