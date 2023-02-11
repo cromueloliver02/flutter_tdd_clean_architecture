@@ -1,4 +1,6 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter_tdd_clean_architecture/core/error/cache_exception.dart';
+import 'package:flutter_tdd_clean_architecture/core/error/cache_failure.dart';
 import 'package:flutter_tdd_clean_architecture/core/error/server_exception.dart';
 import 'package:flutter_tdd_clean_architecture/core/error/server_failure.dart';
 import 'package:flutter_tdd_clean_architecture/features/number_trivia/data/models/number_trivia_model.dart';
@@ -106,6 +108,44 @@ main() {
           },
         );
       });
+    });
+
+    group('device is offline', () {
+      setUp(() {
+        when(() => mockNetworkInfo.isConnected).thenAnswer(
+          (invocation) async => true,
+        );
+      });
+
+      test(
+        'should return last locally cached data when the cached data is present',
+        () async {
+          // arrange
+          when(() => mockLocalDataSource.getLastNumberTrivia())
+              .thenAnswer((invocation) async => tNumberTriviaModel);
+          // act
+          final result = await repository.getConcreteNumberTrivia(tNumber);
+          // assert
+          verifyZeroInteractions(mockRemoteDataSource);
+          verify(() => mockLocalDataSource.getLastNumberTrivia());
+          expect(result, equals(const Right(tNumberTrivia)));
+        },
+      );
+
+      test(
+        'should return CacheFailure when there is no cached data present',
+        () async {
+          // arrange
+          when(() => mockLocalDataSource.getLastNumberTrivia())
+              .thenThrow(CacheException());
+          // act
+          final result = await repository.getConcreteNumberTrivia(tNumber);
+          // assert
+          verifyZeroInteractions(mockRemoteDataSource);
+          verify(() => mockLocalDataSource.getLastNumberTrivia());
+          expect(result, equals(Left(CacheFailure())));
+        },
+      );
     });
   });
 }

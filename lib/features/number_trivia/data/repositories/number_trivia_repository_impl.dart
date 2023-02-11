@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter_tdd_clean_architecture/core/error/cache_failure.dart';
 import 'package:flutter_tdd_clean_architecture/core/error/server_exception.dart';
 import 'package:flutter_tdd_clean_architecture/core/error/server_failure.dart';
 
@@ -25,16 +26,27 @@ class NumberTriviaRepositoryImpl implements NumberTriviaRepository {
   Future<Either<Failure, NumberTrivia>> getConcreteNumberTrivia(
     int number,
   ) async {
-    networkInfo.isConnected;
+    final bool isConnected = await networkInfo.isConnected;
 
-    try {
-      final NumberTriviaModel numberTrivia =
-          await remoteDataSource.getConcreteNumberTrivia(number);
-      localDataSource.cacheNumberTrivia(numberTrivia);
+    if (isConnected) {
+      try {
+        final NumberTriviaModel numberTrivia =
+            await remoteDataSource.getConcreteNumberTrivia(number);
+        localDataSource.cacheNumberTrivia(numberTrivia);
 
-      return Right(numberTrivia);
-    } on ServerException {
-      return Left(ServerFailure());
+        return Right(numberTrivia);
+      } on ServerException {
+        return Left(ServerFailure());
+      }
+    } else {
+      try {
+        final NumberTriviaModel numberTrivia =
+            await localDataSource.getLastNumberTrivia();
+
+        return Right(numberTrivia);
+      } on CacheFailure {
+        return Left(CacheFailure());
+      }
     }
   }
 
