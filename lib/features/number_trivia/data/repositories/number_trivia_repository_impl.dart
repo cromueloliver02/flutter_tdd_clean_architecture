@@ -6,6 +6,7 @@ import '../../domain/entities/number_trivia_entity.dart';
 import '../../domain/repositories/number_trivia_repository.dart';
 import '../data_sources/number_trivia_local_data_source.dart';
 import '../data_sources/number_trivia_remote_data_source.dart';
+import '../models/number_trivia_model.dart';
 
 class NumberTriviaRepositoryImpl implements NumberTriviaRepository {
   final NumberTriviaRemoteDataSource remoteDataSource;
@@ -24,7 +25,11 @@ class NumberTriviaRepositoryImpl implements NumberTriviaRepository {
   ) async {
     networkInfo.isConnected;
 
-    return Right(await remoteDataSource.getConcreteNumberTrivia(number));
+    final NumberTriviaModel numberTrivia =
+        await remoteDataSource.getConcreteNumberTrivia(number);
+    localDataSource.cacheNumberTrivia(numberTrivia);
+
+    return Right(numberTrivia);
   }
 
   @override
