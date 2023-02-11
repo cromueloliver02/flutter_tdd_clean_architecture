@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:flutter_tdd_clean_architecture/features/number_trivia/data/models/number_trivia_model.dart';
 
 import '../../../../core/error/failure.dart';
 import '../../../../core/platform/network_info.dart';
@@ -21,17 +20,11 @@ class NumberTriviaRepositoryImpl implements NumberTriviaRepository {
 
   @override
   Future<Either<Failure, NumberTrivia>> getConcreteNumberTrivia(
-      int number) async {
+    int number,
+  ) async {
     networkInfo.isConnected;
 
-    await Future.delayed(const Duration(seconds: 1));
-
-    const NumberTriviaModel numberTrivia = NumberTriviaModel(
-      number: 1,
-      text: 'test',
-    );
-
-    return const Right(numberTrivia);
+    return Right(await remoteDataSource.getConcreteNumberTrivia(number));
   }
 
   @override
