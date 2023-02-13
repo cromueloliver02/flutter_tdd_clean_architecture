@@ -1,14 +1,11 @@
 import 'dart:convert';
 
-import 'package:flutter_tdd_clean_architecture/core/error/cache_exception.dart';
+import 'package:flutter_tdd_clean_architecture/core/error/server_exception.dart';
 import 'package:flutter_tdd_clean_architecture/features/number_trivia/data/data_sources/number_trivia_remote_data_source.dart';
 import 'package:flutter_tdd_clean_architecture/features/number_trivia/data/models/number_trivia_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-
-import 'package:flutter_tdd_clean_architecture/features/number_trivia/data/data_sources/number_trivia_local_data_source.dart';
 
 import '../../../../fixtures/fixture_reader.dart';
 
@@ -54,6 +51,19 @@ void main() {
       final result = await dataSource.getConcreteNumberTrivia(tNumber);
       // assert
       expect(result, equals(tNumberTriviaModel));
+    });
+
+    test(
+        'should return a ServerException when the response code is NOT 200 (success)',
+        () async {
+      // arrange
+      when(() => mockHttpClient.get(any<Uri>(), headers: any())).thenAnswer(
+          (invocation) async => http.Response('Something went wrong', 200));
+      // act
+      final call = dataSource.getConcreteNumberTrivia;
+      // assert
+      expect(
+          () => call(tNumber), throwsA(const TypeMatcher<ServerException>()));
     });
   });
 }
