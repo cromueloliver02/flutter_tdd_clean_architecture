@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../../domain/entities/number_trivia_entity.dart';
+
 part 'number_trivia_event.dart';
 part 'number_trivia_state.dart';
 

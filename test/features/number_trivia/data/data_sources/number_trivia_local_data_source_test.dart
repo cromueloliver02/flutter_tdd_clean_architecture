@@ -13,12 +13,17 @@ import '../../../../fixtures/fixture_reader.dart';
 class MockSharedPreferences extends Mock implements SharedPreferences {}
 
 void main() {
-  late final MockSharedPreferences mockSharedPreferences;
-  late final NumberTriviaLocalDataSourceImpl dataSource;
+  MockSharedPreferences? mockSharedPreferences;
+  NumberTriviaLocalDataSourceImpl? dataSource;
 
   setUp(() {
     mockSharedPreferences = MockSharedPreferences();
-    dataSource = NumberTriviaLocalDataSourceImpl(mockSharedPreferences);
+    dataSource = NumberTriviaLocalDataSourceImpl(mockSharedPreferences!);
+  });
+
+  tearDown(() {
+    mockSharedPreferences = null;
+    dataSource = null;
   });
 
   group('getLastNumberTrivia', () {
@@ -29,12 +34,12 @@ void main() {
       'should return NumberTrivia from SharedPreferences when there is one in the cache',
       () async {
         // arrange
-        when(() => mockSharedPreferences.getString(any<String>()))
+        when(() => mockSharedPreferences!.getString(any<String>()))
             .thenReturn(fixture('trivia_cached.json'));
         // act
-        final result = await dataSource.getLastNumberTrivia();
+        final result = await dataSource!.getLastNumberTrivia();
         // assert
-        verify(() => mockSharedPreferences.getString(kCachedNumberTrivia));
+        verify(() => mockSharedPreferences!.getString(kCachedNumberTrivia));
         expect(result, equals(tNumberTriviaModel));
       },
     );
@@ -43,10 +48,10 @@ void main() {
       'should throw a CacheException when there is no cache number trivia',
       () async {
         // arrange
-        when(() => mockSharedPreferences.getString(any<String>()))
+        when(() => mockSharedPreferences!.getString(any<String>()))
             .thenReturn(null);
         // act
-        final call = dataSource.getLastNumberTrivia;
+        final call = dataSource!.getLastNumberTrivia;
         // assert
         expect(() => call(), throwsA(const TypeMatcher<CacheException>()));
       },
@@ -60,11 +65,11 @@ void main() {
       'should call SharedPreferences to cache the data',
       () async {
         // act
-        dataSource.cacheNumberTrivia(tNumberTriviaModel);
+        dataSource!.cacheNumberTrivia(tNumberTriviaModel);
         // assert
         final expectedJsonString = jsonEncode(tNumberTriviaModel.toMap());
-        verify(() => mockSharedPreferences.setString(
-            kCachedNumberTrivia, expectedJsonString));
+        verify(() => mockSharedPreferences!
+            .setString(kCachedNumberTrivia, expectedJsonString));
       },
     );
   });
