@@ -22,8 +22,13 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
         _getRandomNumberTrivia = random,
         _inputConverter = inputConverter,
         super(NumberTriviaInitial()) {
-    on<NumberTriviaEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+    on<NumberTriviaGetConcreteRequested>(_onNumberTriviaGetConcreteRequested);
+  }
+
+  void _onNumberTriviaGetConcreteRequested(
+    NumberTriviaGetConcreteRequested event,
+    Emitter<NumberTriviaState> emit,
+  ) {
+    _inputConverter.stringToUnsignedInteger(event.numberString);
   }
 }

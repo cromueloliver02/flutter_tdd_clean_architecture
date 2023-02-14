@@ -1,4 +1,5 @@
 import 'package:flutter_tdd_clean_architecture/core/utils/input_converter.dart';
+import 'package:flutter_tdd_clean_architecture/features/number_trivia/domain/entities/number_trivia_entity.dart';
 import 'package:flutter_tdd_clean_architecture/features/number_trivia/presentation/blocs/number_trivia/number_trivia_bloc.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -40,5 +41,28 @@ void main() {
 
   test('NumberTriviaState should be initial state', () {
     expect(bloc!.state, equals(NumberTriviaInitial()));
+  });
+
+  group('GetTriviaForConcreteNumber', () {
+    const tNumberString = '1';
+    const tNumberParsed = 1;
+    final tNumberTrivia = NumberTrivia(number: 1, text: 'test');
+
+    test(
+        'should call the InputConverter to validate and convert the string to am unsigned integer',
+        () async {
+      // arrange
+      when(() => mockInputConverter!.stringToUnsignedInteger(any<String>()))
+          .thenReturn(const Right(tNumberParsed));
+      // act
+      bloc!.add(
+        const NumberTriviaGetConcreteRequested(numberString: tNumberString),
+      );
+      await untilCalled(
+        () => mockInputConverter!.stringToUnsignedInteger(any<String>()),
+      );
+      // assert
+      verify(() => mockInputConverter!.stringToUnsignedInteger(tNumberString));
+    });
   });
 }
