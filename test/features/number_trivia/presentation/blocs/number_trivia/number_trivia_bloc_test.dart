@@ -37,4 +37,8 @@ void main() {
     mockInputConverter = null;
     bloc = null;
   });
+
+  test('NumberTriviaState should be initial state', () {
+    expect(bloc!.state, equals(NumberTriviaInitial()));
+  });
 }
