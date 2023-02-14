@@ -64,5 +64,23 @@ void main() {
       // assert
       verify(() => mockInputConverter!.stringToUnsignedInteger(tNumberString));
     });
+
+    test('should emit [Error] when the input is invalid', () async {
+      // arrange
+      when(() => mockInputConverter!.stringToUnsignedInteger(any<String>()))
+          .thenReturn(Left(InvalidInputFailure()));
+
+      // assert later
+      final expected = [
+        NumberTriviaInitial(),
+        const NumberTriviaFailure(kInputFailureMessage),
+      ];
+      expectLater(bloc!.stream, emitsInOrder(expected));
+
+      // act
+      bloc!.add(
+        const NumberTriviaGetConcreteRequested(numberString: tNumberString),
+      );
+    });
   });
 }

@@ -9,6 +9,11 @@ import '../../../domain/entities/number_trivia_entity.dart';
 part 'number_trivia_event.dart';
 part 'number_trivia_state.dart';
 
+const String kServerFailureMessage = 'Server Failure';
+const String kCacheFailureMessage = 'Cache Failure';
+const String kInputFailureMessage =
+    'Invalid Input - The number must be a positive integer or zero';
+
 class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
   final GetConcreteNumberTrivia _getConcreteNumberTrivia;
   final GetRandomNumberTrivia _getRandomNumberTrivia;
@@ -29,6 +34,14 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
     NumberTriviaGetConcreteRequested event,
     Emitter<NumberTriviaState> emit,
   ) {
-    _inputConverter.stringToUnsignedInteger(event.numberString);
+    emit(NumberTriviaInitial()); // temporary hack
+
+    final inputEither =
+        _inputConverter.stringToUnsignedInteger(event.numberString);
+
+    inputEither.fold(
+      (l) => emit(const NumberTriviaFailure(kInputFailureMessage)),
+      (r) {},
+    );
   }
 }
