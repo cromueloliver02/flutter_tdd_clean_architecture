@@ -1,3 +1,4 @@
+import 'package:flutter_tdd_clean_architecture/core/use_cases/use_case.dart';
 import 'package:flutter_tdd_clean_architecture/core/utils/input_converter.dart';
 import 'package:flutter_tdd_clean_architecture/features/number_trivia/domain/entities/number_trivia_entity.dart';
 import 'package:flutter_tdd_clean_architecture/features/number_trivia/presentation/blocs/number_trivia/number_trivia_bloc.dart';
@@ -46,14 +47,18 @@ void main() {
   group('GetTriviaForConcreteNumber', () {
     const tNumberString = '1';
     const tNumberParsed = 1;
-    final tNumberTrivia = NumberTrivia(number: 1, text: 'test');
+    const tNumberTrivia = NumberTrivia(number: 1, text: 'test');
+
+    void setUpMockInputConverterSuccess() {
+      when(() => mockInputConverter!.stringToUnsignedInteger(any<String>()))
+          .thenReturn(const Right(tNumberParsed));
+    }
 
     test(
         'should call the InputConverter to validate and convert the string to am unsigned integer',
         () async {
       // arrange
-      when(() => mockInputConverter!.stringToUnsignedInteger(any<String>()))
-          .thenReturn(const Right(tNumberParsed));
+      setUpMockInputConverterSuccess();
       // act
       bloc!.add(
         const NumberTriviaGetConcreteRequested(numberString: tNumberString),
@@ -80,6 +85,24 @@ void main() {
       // act
       bloc!.add(
         const NumberTriviaGetConcreteRequested(numberString: tNumberString),
+      );
+    });
+
+    test('should get the data from the concrete use case', () async {
+      // arrange
+      setUpMockInputConverterSuccess();
+      when(() => mockGetConcreteNumberTrivia!(Params(number: any<int>())))
+          .thenAnswer((invocation) async => Right(tNumberTrivia));
+      // act
+      bloc!.add(
+        const NumberTriviaGetConcreteRequested(numberString: tNumberString),
+      );
+      await untilCalled(
+        () => mockGetConcreteNumberTrivia!(Params(number: any<int>())),
+      );
+      // assert
+      verify(
+        () => mockGetConcreteNumberTrivia!(const Params(number: tNumberParsed)),
       );
     });
   });
