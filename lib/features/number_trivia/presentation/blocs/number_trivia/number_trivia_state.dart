@@ -14,7 +14,7 @@ class NumberTriviaLoading extends NumberTriviaState {}
 class NumberTriviaSuccess extends NumberTriviaState {
   final NumberTrivia trivia;
 
-  const NumberTriviaSuccess(this.trivia);
+  const NumberTriviaSuccess({required this.trivia});
 
   @override
   List<Object> get props => [trivia];
