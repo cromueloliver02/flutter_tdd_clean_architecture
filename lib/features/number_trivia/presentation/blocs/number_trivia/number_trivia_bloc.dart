@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_tdd_clean_architecture/core/error/cache_failure.dart';
 import 'package:flutter_tdd_clean_architecture/core/error/failure.dart';
+import 'package:flutter_tdd_clean_architecture/core/error/server_failure.dart';
 import 'package:flutter_tdd_clean_architecture/core/use_cases/use_case.dart';
 import 'package:flutter_tdd_clean_architecture/core/utils/input_converter.dart';
 import 'package:flutter_tdd_clean_architecture/features/number_trivia/domain/use_cases/get_concrete_number_trivia.dart';
@@ -51,10 +53,21 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
 
         failureOrTrivia.fold(
           (Failure failure) =>
-              emit(const NumberTriviaFailure(message: kServerFailureMessage)),
+              emit(NumberTriviaFailure(message: _mapFailureToMessage(failure))),
           (NumberTrivia trivia) => emit(NumberTriviaSuccess(trivia: trivia)),
         );
       },
     );
+  }
+
+  String _mapFailureToMessage(Failure failure) {
+    switch (failure.runtimeType) {
+      case ServerFailure:
+        return kServerFailureMessage;
+      case CacheFailure:
+        return kCacheFailureMessage;
+      default:
+        return 'Unexpected error';
+    }
   }
 }

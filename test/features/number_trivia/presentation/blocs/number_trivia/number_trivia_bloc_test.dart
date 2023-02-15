@@ -1,3 +1,4 @@
+import 'package:flutter_tdd_clean_architecture/core/error/cache_failure.dart';
 import 'package:flutter_tdd_clean_architecture/core/error/server_failure.dart';
 import 'package:flutter_tdd_clean_architecture/core/use_cases/use_case.dart';
 import 'package:flutter_tdd_clean_architecture/core/utils/input_converter.dart';
@@ -135,6 +136,26 @@ void main() {
         NumberTriviaInitial(),
         NumberTriviaLoading(),
         const NumberTriviaFailure(message: kServerFailureMessage),
+      ];
+      expectLater(bloc!.stream, emitsInOrder(expected));
+      // act
+      bloc!.add(
+        const NumberTriviaGetConcreteRequested(numberString: tNumberString),
+      );
+    });
+
+    test(
+        'should emit [Loading, Failure] with a proper message for the error when getting data fails',
+        () {
+      // arrange
+      setUpMockInputConverterSuccess();
+      when(() => mockGetConcreteNumberTrivia!(Params(number: any<int>())))
+          .thenAnswer((invocation) async => Left(CacheFailure()));
+      // assert later
+      final expected = [
+        NumberTriviaInitial(),
+        NumberTriviaLoading(),
+        const NumberTriviaFailure(message: kCacheFailureMessage),
       ];
       expectLater(bloc!.stream, emitsInOrder(expected));
       // act
