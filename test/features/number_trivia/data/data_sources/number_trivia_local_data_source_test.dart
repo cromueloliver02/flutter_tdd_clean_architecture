@@ -18,7 +18,9 @@ void main() {
 
   setUp(() {
     mockSharedPreferences = MockSharedPreferences();
-    dataSource = NumberTriviaLocalDataSourceImpl(mockSharedPreferences!);
+    dataSource = NumberTriviaLocalDataSourceImpl(
+      sharedPreferences: mockSharedPreferences!,
+    );
   });
 
   tearDown(() {

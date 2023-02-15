@@ -20,7 +20,9 @@ const kCachedNumberTrivia = 'CACHED_NUMBER_TRIVIA';
 class NumberTriviaLocalDataSourceImpl implements NumberTriviaLocalDataSource {
   final SharedPreferences sharedPreferences;
 
-  const NumberTriviaLocalDataSourceImpl(this.sharedPreferences);
+  const NumberTriviaLocalDataSourceImpl({
+    required this.sharedPreferences,
+  });
 
   @override
   Future<NumberTriviaModel> getLastNumberTrivia() {
