@@ -164,4 +164,66 @@ void main() {
       );
     });
   });
+
+  group('GetTriviaForRandomNumber', () {
+    const tNumberTrivia = NumberTrivia(number: 1, text: 'test');
+
+    test('should get the data from the random use case', () async {
+      // arrange
+      when(() => mockGetRandomNumberTrivia!(NoParams()))
+          .thenAnswer((invocation) async => const Right(tNumberTrivia));
+      // act
+      bloc!.add(NumberTriviaGetRandomRequested());
+      await untilCalled(() => mockGetRandomNumberTrivia!(NoParams()));
+      // assert
+      verify(() => mockGetRandomNumberTrivia!(NoParams()));
+    });
+
+    test('should emit [Loading, Success] when data is gotten successfully', () {
+      // arrange
+      when(() => mockGetRandomNumberTrivia!(NoParams()))
+          .thenAnswer((invocation) async => const Right(tNumberTrivia));
+      // assert later
+      final expected = [
+        NumberTriviaInitial(),
+        NumberTriviaLoading(),
+        const NumberTriviaSuccess(trivia: tNumberTrivia),
+      ];
+      expectLater(bloc!.stream, emitsInOrder(expected));
+      // act
+      bloc!.add(NumberTriviaGetRandomRequested());
+    });
+
+    test('should emit [Loading, Failure] when getting data fails', () {
+      // arrange
+      when(() => mockGetRandomNumberTrivia!(NoParams()))
+          .thenAnswer((invocation) async => Left(ServerFailure()));
+      // assert later
+      final expected = [
+        NumberTriviaInitial(),
+        NumberTriviaLoading(),
+        const NumberTriviaFailure(message: kServerFailureMessage),
+      ];
+      expectLater(bloc!.stream, emitsInOrder(expected));
+      // act
+      bloc!.add(NumberTriviaGetRandomRequested());
+    });
+
+    test(
+        'should emit [Loading, Failure] with a proper message for the error when getting data fails',
+        () {
+      // arrange
+      when(() => mockGetRandomNumberTrivia!(NoParams()))
+          .thenAnswer((invocation) async => Left(CacheFailure()));
+      // assert later
+      final expected = [
+        NumberTriviaInitial(),
+        NumberTriviaLoading(),
+        const NumberTriviaFailure(message: kCacheFailureMessage),
+      ];
+      expectLater(bloc!.stream, emitsInOrder(expected));
+      // act
+      bloc!.add(NumberTriviaGetRandomRequested());
+    });
+  });
 }

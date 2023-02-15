@@ -32,6 +32,7 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
         _inputConverter = inputConverter,
         super(NumberTriviaInitial()) {
     on<NumberTriviaGetConcreteRequested>(_onNumberTriviaGetConcreteRequested);
+    on<NumberTriviaGetRandomRequested>(_onNumberTriviaGetRandomRequested);
   }
 
   void _onNumberTriviaGetConcreteRequested(
@@ -57,6 +58,22 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
           (NumberTrivia trivia) => emit(NumberTriviaSuccess(trivia: trivia)),
         );
       },
+    );
+  }
+
+  void _onNumberTriviaGetRandomRequested(
+    NumberTriviaGetRandomRequested event,
+    Emitter<NumberTriviaState> emit,
+  ) async {
+    emit(NumberTriviaInitial()); // temporary hack
+    emit(NumberTriviaLoading());
+
+    final failureOrTrivia = await _getRandomNumberTrivia(NoParams());
+
+    failureOrTrivia.fold(
+      (Failure failure) =>
+          emit(NumberTriviaFailure(message: _mapFailureToMessage(failure))),
+      (NumberTrivia trivia) => emit(NumberTriviaSuccess(trivia: trivia)),
     );
   }
 
