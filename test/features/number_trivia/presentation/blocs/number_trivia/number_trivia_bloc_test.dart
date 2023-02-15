@@ -1,3 +1,4 @@
+import 'package:flutter_tdd_clean_architecture/core/error/server_failure.dart';
 import 'package:flutter_tdd_clean_architecture/core/use_cases/use_case.dart';
 import 'package:flutter_tdd_clean_architecture/core/utils/input_converter.dart';
 import 'package:flutter_tdd_clean_architecture/features/number_trivia/domain/entities/number_trivia_entity.dart';
@@ -78,7 +79,7 @@ void main() {
       // assert later
       final expected = [
         NumberTriviaInitial(),
-        const NumberTriviaFailure(kInputFailureMessage),
+        const NumberTriviaFailure(message: kInputFailureMessage),
       ];
       expectLater(bloc!.stream, emitsInOrder(expected));
 
@@ -116,6 +117,24 @@ void main() {
         NumberTriviaInitial(),
         NumberTriviaLoading(),
         const NumberTriviaSuccess(trivia: tNumberTrivia),
+      ];
+      expectLater(bloc!.stream, emitsInOrder(expected));
+      // act
+      bloc!.add(
+        const NumberTriviaGetConcreteRequested(numberString: tNumberString),
+      );
+    });
+
+    test('should emit [Loading, Failure] when getting data fails', () {
+      // arrange
+      setUpMockInputConverterSuccess();
+      when(() => mockGetConcreteNumberTrivia!(Params(number: any<int>())))
+          .thenAnswer((invocation) async => Left(ServerFailure()));
+      // assert later
+      final expected = [
+        NumberTriviaInitial(),
+        NumberTriviaLoading(),
+        const NumberTriviaFailure(message: kServerFailureMessage),
       ];
       expectLater(bloc!.stream, emitsInOrder(expected));
       // act

@@ -23,7 +23,7 @@ class NumberTriviaSuccess extends NumberTriviaState {
 class NumberTriviaFailure extends NumberTriviaState {
   final String message;
 
-  const NumberTriviaFailure(this.message);
+  const NumberTriviaFailure({required this.message});
 
   @override
   List<Object> get props => [message];

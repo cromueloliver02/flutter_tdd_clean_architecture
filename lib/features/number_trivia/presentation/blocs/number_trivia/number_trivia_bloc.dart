@@ -42,7 +42,8 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
         _inputConverter.stringToUnsignedInteger(event.numberString);
 
     inputEither.fold(
-      (Failure l) => emit(const NumberTriviaFailure(kInputFailureMessage)),
+      (Failure l) =>
+          emit(const NumberTriviaFailure(message: kInputFailureMessage)),
       (int number) async {
         emit(NumberTriviaLoading());
         final failureOrTrivia =
@@ -50,7 +51,7 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
 
         failureOrTrivia.fold(
           (Failure failure) =>
-              emit(const NumberTriviaFailure(kInputFailureMessage)),
+              emit(const NumberTriviaFailure(message: kServerFailureMessage)),
           (NumberTrivia trivia) => emit(NumberTriviaSuccess(trivia: trivia)),
         );
       },
