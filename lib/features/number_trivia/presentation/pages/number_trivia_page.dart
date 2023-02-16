@@ -14,18 +14,20 @@ class NumberTriviaPage extends StatelessWidget {
       appBar: AppBar(title: const Text('Number Trivia')),
       body: BlocProvider<NumberTriviaBloc>.value(
         value: sl<NumberTriviaBloc>(),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              // TOP HALF
-              BlocBuilder<NumberTriviaBloc, NumberTriviaState>(
-                builder: _buildNumberTrivia,
-              ),
-              const SizedBox(height: 10),
-              const TriviaControls(),
-            ],
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                // TOP HALF
+                BlocBuilder<NumberTriviaBloc, NumberTriviaState>(
+                  builder: _buildNumberTrivia,
+                ),
+                const SizedBox(height: 10),
+                const TriviaControls(),
+              ],
+            ),
           ),
         ),
       ),
