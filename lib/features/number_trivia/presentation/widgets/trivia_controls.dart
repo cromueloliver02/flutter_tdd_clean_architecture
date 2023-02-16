@@ -10,6 +10,7 @@ class TriviaControls extends StatefulWidget {
 }
 
 class TriviaControlsState extends State<TriviaControls> {
+  late final TextEditingController _controller;
   String _numberStr = '';
 
   @override
@@ -17,6 +18,7 @@ class TriviaControlsState extends State<TriviaControls> {
     return Column(
       children: [
         TextField(
+          controller: _controller,
           keyboardType: TextInputType.number,
           decoration: const InputDecoration(
             hintText: 'Input a number',
@@ -51,7 +53,20 @@ class TriviaControlsState extends State<TriviaControls> {
     );
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   void _getConcreteNumberTrivia(BuildContext ctx) {
+    _controller.clear();
     ctx
         .read<NumberTriviaBloc>()
         .add(NumberTriviaGetConcreteRequested(numberString: _numberStr));
