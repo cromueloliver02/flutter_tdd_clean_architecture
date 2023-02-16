@@ -24,19 +24,7 @@ class NumberTriviaPage extends StatelessWidget {
                 builder: _buildNumberTrivia,
               ),
               const SizedBox(height: 10),
-              Column(
-                children: [
-                  const Placeholder(fallbackHeight: 40),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: const [
-                      Expanded(child: Placeholder(fallbackHeight: 30)),
-                      SizedBox(width: 10),
-                      Expanded(child: Placeholder(fallbackHeight: 30)),
-                    ],
-                  ),
-                ],
-              ),
+              const TriviaControls(),
             ],
           ),
         ),
