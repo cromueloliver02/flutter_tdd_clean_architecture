@@ -24,6 +24,7 @@ class TriviaControlsState extends State<TriviaControls> {
             hintText: 'Input a number',
             border: OutlineInputBorder(),
           ),
+          onEditingComplete: () => _getConcreteNumberTrivia(context),
           onChanged: (String? value) {
             if (value == null) return;
 
@@ -67,6 +68,7 @@ class TriviaControlsState extends State<TriviaControls> {
 
   void _getConcreteNumberTrivia(BuildContext ctx) {
     _controller.clear();
+    FocusScope.of(ctx).unfocus();
     ctx
         .read<NumberTriviaBloc>()
         .add(NumberTriviaGetConcreteRequested(numberString: _numberStr));
@@ -74,6 +76,7 @@ class TriviaControlsState extends State<TriviaControls> {
 
   void _getRandomNumberTrivia(BuildContext ctx) {
     _controller.clear();
+    FocusScope.of(ctx).unfocus();
     ctx.read<NumberTriviaBloc>().add(NumberTriviaGetRandomRequested());
   }
 }
