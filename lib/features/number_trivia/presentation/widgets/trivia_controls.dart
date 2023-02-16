@@ -42,7 +42,7 @@ class TriviaControlsState extends State<TriviaControls> {
             const SizedBox(width: 10),
             Expanded(
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () => _getRandomNumberTrivia(context),
                 style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
                 child: const Text('Get random trivia'),
               ),
@@ -70,5 +70,10 @@ class TriviaControlsState extends State<TriviaControls> {
     ctx
         .read<NumberTriviaBloc>()
         .add(NumberTriviaGetConcreteRequested(numberString: _numberStr));
+  }
+
+  void _getRandomNumberTrivia(BuildContext ctx) {
+    _controller.clear();
+    ctx.read<NumberTriviaBloc>().add(NumberTriviaGetRandomRequested());
   }
 }
