@@ -26,7 +26,7 @@ Future<void> init() async {
 
   //! Core
   sl.registerLazySingleton<InputConverter>(() => InputConverter());
-  sl.registerLazySingleton<NetworkInfo>(
+  sl.registerLazySingleton<NetworkInfoImpl>(
       () => NetworkInfoImpl(sl<DataConnectionChecker>()));
 
   //! Features - Number Trivia

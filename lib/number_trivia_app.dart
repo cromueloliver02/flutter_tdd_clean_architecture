@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import './features/number_trivia/presentation/pages/number_trivia_page.dart';
+
 class NumberTriviaApp extends StatelessWidget {
   const NumberTriviaApp({super.key});
 
@@ -8,12 +10,11 @@ class NumberTriviaApp extends StatelessWidget {
     return MaterialApp(
       title: 'Number Trivia App',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.light(),
-      home: const Scaffold(
-        body: Center(
-          child: Text('Number Trivia App'),
-        ),
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+        primaryColor: Colors.green.shade800,
       ),
+      home: const NumberTriviaPage(),
     );
   }
 }
