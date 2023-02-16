@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_tdd_clean_architecture/core/error/cache_failure.dart';
@@ -38,27 +39,28 @@ class NumberTriviaBloc extends Bloc<NumberTriviaEvent, NumberTriviaState> {
   void _onNumberTriviaGetConcreteRequested(
     NumberTriviaGetConcreteRequested event,
     Emitter<NumberTriviaState> emit,
-  ) {
-    emit(NumberTriviaInitial()); // temporary hack
+  ) async {
+    emit(NumberTriviaLoading());
 
     final inputEither =
         _inputConverter.stringToUnsignedInteger(event.numberString);
 
-    inputEither.fold(
-      (Failure l) =>
-          emit(const NumberTriviaFailure(message: kInputFailureMessage)),
-      (int number) async {
-        emit(NumberTriviaLoading());
-        final failureOrTrivia =
-            await _getConcreteNumberTrivia(Params(number: number));
+    if (inputEither.isLeft()) {
+      emit(const NumberTriviaFailure(message: kInputFailureMessage));
+    }
 
-        failureOrTrivia.fold(
-          (Failure failure) =>
-              emit(NumberTriviaFailure(message: _mapFailureToMessage(failure))),
-          (NumberTrivia trivia) => emit(NumberTriviaSuccess(trivia: trivia)),
-        );
-      },
-    );
+    if (inputEither.isRight()) {
+      final Either<Failure, NumberTrivia> failureOrTrivia =
+          await _getConcreteNumberTrivia(
+              Params(number: inputEither.getOrElse(() => 1)));
+
+      failureOrTrivia.fold(
+        (Failure failure) {
+          emit(NumberTriviaFailure(message: _mapFailureToMessage(failure)));
+        },
+        (NumberTrivia trivia) => emit(NumberTriviaSuccess(trivia: trivia)),
+      );
+    }
   }
 
   void _onNumberTriviaGetRandomRequested(
